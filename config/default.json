@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://test:test@kruggel-cluster-qprk6.azure.mongodb.net/alfredo?retryWrites=true&w=majority",
+  "jwtSecret": ""
+}
