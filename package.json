@@ -1,0 +1,11 @@
+{
+  "name": "alfredo",
+  "version": "1.0.0",
+  "description": "Alfredo web app for recipe searching, meal planning, and shopping list creation",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm start"
+  },
+  "author": "David Kruggel",
+  "license": "MIT"
+}
