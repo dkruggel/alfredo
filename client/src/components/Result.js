@@ -2,10 +2,6 @@ import React from 'react';
 import { List, ListItem, ListItemText } from '@material-ui/core';
 
 export default class Result extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
