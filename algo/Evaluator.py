@@ -67,14 +67,16 @@ class Evaluator:
             
             print ("\nWe recommend:")
             for userID, businessID, actualRating, estimatedRating, _ in predictions:
-                # bName = GetBusinessName(businessID)
-                # intMovieID = int(movieID)
-                recommendations.append((businessID, estimatedRating))
+                bName = data.getBusinessName(businessID)
+                cats, hours = data.getBusinessData(businessID)
+                recommendations.append((bName, estimatedRating, cats, hours))
             
             recommendations.sort(key=lambda x: x[1], reverse=True)
-            
-            for ratings in recommendations[:10]:
-                # Return a dictionary with businessID, rating, categories, hours
-                # and don't print the below line
-                # Add data to MongoDB and change code to use the DB
-                print(data.getBusinessName(ratings[0])) #, ratings[1]
+
+            return recommendations[:10]
+
+            # for ratings in recommendations[:10]:
+            #     # Return a dictionary with businessID, rating, categories, hours
+            #     # and don't print the below line
+            #     # Add data to MongoDB and change code to use the DB
+            #     print(data.getBusinessName(ratings[0])) #, ratings[1]

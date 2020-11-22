@@ -81,3 +81,14 @@ class Data:
       return self.name_to_businessID[businessName]
     else:
       return 0
+
+  def getBusinessData(self, business):
+    with open(self.businessesPath, newline='') as csvfile:
+      businessReader = csv.reader(csvfile)
+      next(businessReader)
+      for row in businessReader:
+        businessID = row[0]
+        if (business == businessID):
+          return row[2], row[4]
+
+    return []

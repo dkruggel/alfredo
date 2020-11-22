@@ -46,4 +46,4 @@ class KNNBakeOff:
     # Fight!
     evaluator.Evaluate(False)
 
-    evaluator.SampleTopNRecs(d, testSubject=self.user)
+    return evaluator.SampleTopNRecs(d, testSubject=self.user)

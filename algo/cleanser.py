@@ -12,10 +12,11 @@ def GetRestaurants():
             state = line[line.find('state') + 8:line.find('postal_code') - 3]
             categories = line[line.find(
                 'categories') + 13:line.find('hours') - 3].split(', ')
+            hours = line[line.find('hours') + 8:line.find('}}') - 1]
             isRest = 'Restaurants' in categories and 'Shopping' not in categories and 'Grocery' not in categories and 'Coffee & Tea' not in categories and 'Tea Rooms' not in categories and 'Convenience Stores' not in categories and 'Hotels & Travel' not in categories and 'Internet Cafes' not in categories
             if isRest:
                 businesses.append(businessID)
-                restaurants.append([businessID, name, categories, state])
+                restaurants.append([businessID, name, categories, state, hours])
 
         # print(str(len(businesses)))
         with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/businesses.csv', 'w') as bFile:

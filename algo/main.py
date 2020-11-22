@@ -1,10 +1,15 @@
 from KNNBakeOff import KNNBakeOff
 import sys
 
+def GetBusinesses(user_name):
+  if len(user_name) > 0:
+    rec = KNNBakeOff(user_name)
+    res = rec.DoBakeOff()
+    print(res)
+    return res
+  else:
+    print('Need argument with username.')
+    return 'No results'
+    
 user_name = sys.argv[1]
-
-if len(user_name) > 0:
-  rec = KNNBakeOff(user_name)
-  rec.DoBakeOff()
-else:
-  print('Need argument with username.')
+GetBusinesses(user_name)
