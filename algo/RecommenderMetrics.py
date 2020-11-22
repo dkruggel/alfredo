@@ -17,11 +17,11 @@ class RecommenderMetrics:
 
     for userID, businessID, actualStars, estimatedStars, _ in predictions:
       if (estimatedStars >= actualStars):
-        top_n[int(userID)].append((int(businessID), estimatedStars))
+        top_n[userID].append((businessID, estimatedStars))
         
     for userID, stars in top_n.items():
       stars.sort(key=itemgetter(1), reverse=True)
-      top_n[int(userID)] = stars[:n]
+      top_n[userID] = stars[:n]
     
     return top_n
 
@@ -33,8 +33,8 @@ class RecommenderMetrics:
       userID = leftOut[0]
       leftOutBusinessID = leftOut[1]
       hit = False
-      for businessID, predictedRating in topNPredicted[int(userID)]:
-        if (int(leftOutBusinessID) == int(businessID)):
+      for businessID, predictedRating in topNPredicted[userID]:
+        if (leftOutBusinessID == businessID):
           hit = True
           break
       if (hit):
@@ -51,8 +51,8 @@ class RecommenderMetrics:
     for userID, leftOutBusinessID, actualStars, estimatedStars, _ in leftOutPredictions:
       if (actualStars >= ratingCutoff):
         hit = False
-        for businessID, predictedStars in topNPredicted[int(userID)]:
-          if (int(leftOutBusinessID) == businessID):
+        for businessID, predictedStars in topNPredicted[userID]:
+          if (leftOutBusinessID == businessID):
             hit = True
             break
         if (hit):
@@ -68,16 +68,17 @@ class RecommenderMetrics:
 
     for userID, leftOutBusinessID, actualStars, estimatedStars, _ in leftOutPredictions:
       hit = False
-      for businessID, predictedStars in topNPredicted[int(userID)]:
-        if (int(leftOutBusinessID) == businessID):
+      for businessID, predictedStars in topNPredicted[userID]:
+        if (leftOutBusinessID == businessID):
           hit = True
           break
       if (hit):
-        hits += 1
+        hits[actualStars] += 1
 
-      total += 1
+      total[actualStars] += 1
 
-    return hits/total
+    for rating in sorted(hits.keys()):
+      print(rating, hits[rating] / total[rating])
 
   def AverateReciprocalHitRank(topNPredicted, leftOutPredictions):
     summation = 0
@@ -86,9 +87,9 @@ class RecommenderMetrics:
     for userID, leftOutBusinessID, actualStars, estimatedStars, _ in leftOutPredictions:
       hitRank = 0
       rank = 0
-      for businessID, predictedStars in topNPredicted[int(userID)]:
+      for businessID, predictedStars in topNPredicted[userID]:
         rank = rank + 1
-        if (int(leftOutBusinessID) == businessID):
+        if (leftOutBusinessID == businessID):
           hitRank = rank
           break
       if (hitRank > 0):
@@ -115,7 +116,7 @@ class RecommenderMetrics:
     n = 0
     total = 0
     simsMatrix = simsAlgo.compute_similarities()
-    for userID, in topNPredicted.keys():
+    for userID in topNPredicted.keys():
       pairs = itertools.combinations(topNPredicted[userID], 2)
       for pair in pairs:
         business1 = pair[0][0]
