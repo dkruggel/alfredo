@@ -43,7 +43,7 @@ class Evaluator:
             for (name, metrics) in results.items():
                 print("{:<10} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f}".format(
                         name, metrics["RMSE"], metrics["MAE"], metrics["HR"], metrics["cHR"], metrics["ARHR"],
-                                      metrics["Coverage"], metrics["Diversity"], metrics["Novelty"]))
+                                    metrics["Coverage"], metrics["Diversity"], metrics["Novelty"]))
         else:
             print("{:<10} {:<10} {:<10}".format("Algorithm", "RMSE", "MAE"))
             for (name, metrics) in results.items():
@@ -65,7 +65,7 @@ class Evaluator:
             
             recommendations = []
             
-            print ("\nWe recommend:")
+            #print ("\nWe recommend:")
             for userID, businessID, actualRating, estimatedRating, _ in predictions:
                 bName = data.getBusinessName(businessID)
                 cats, hours = data.getBusinessData(businessID)

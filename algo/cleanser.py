@@ -19,11 +19,11 @@ def GetRestaurants():
                 restaurants.append([businessID, name, categories, state, hours])
 
         # print(str(len(businesses)))
-        with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/businesses.csv', 'w') as bFile:
-            writer = csv.writer(bFile)
+        # with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/businesses.csv', 'w') as bFile:
+        #     writer = csv.writer(bFile)
 
-            writer.writerow(['BusinessID', 'Name', 'Categories', 'State'])
-            writer.writerows(restaurants)
+        #     writer.writerow(['BusinessID', 'Name', 'Categories', 'State'])
+        #     writer.writerows(restaurants)
 
         return businesses, restaurants
 
@@ -31,7 +31,7 @@ def GetRestaurants():
 def GetReviews(businesses):
     with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/yelp_academic_dataset_review.json') as reviewFile:
         lines = reviewFile.readlines(20000000)
-        users = []
+        reviews = []
         for line in lines:
             userID = line[line.find('user_id') +
                           10:line.find('business_id') - 3]
@@ -41,17 +41,40 @@ def GetReviews(businesses):
             date = line[line.find('date') + 7:line.find('}') - 1]
             isRest = businessID in businesses
             if isRest and date.startswith(('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')) and len(date) < 20:
-                users.append([userID, businessID, stars, date])
+                reviews.append([userID, businessID, stars, date])
 
-        with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/reviews.csv', mode='w') as outbound:
+        # with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/reviews.csv', mode='w') as outbound:
+        #     writer = csv.writer(outbound)
+
+        #     writer.writerow(['UserID', 'BusinessID', 'Stars', 'Date'])
+        #     writer.writerows(reviews)
+
+        return reviews
+
+def GetUsers():
+    reviewUsers = []
+    with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/reviews.csv') as reviewsFile:
+        reviewReader = csv.reader(reviewsFile)
+        next(reviewReader)
+        for row in reviewReader:
+            reviewUsers.append(row[0])
+    with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/yelp_academic_dataset_user.json') as userFile:    
+        line = userFile.readline()
+        users = []
+        while line != '':
+            userID = line[line.find('user_id') + 10:line.find('name') - 3]
+            if userID in reviewUsers:
+                name = line[line.find('name') + 7:line.find('review_count') - 3]
+                users.append((userID, name))
+            line = userFile.readline()
+
+        with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/users.csv', mode='w') as outbound:
             writer = csv.writer(outbound)
 
-            writer.writerow(['UserID', 'BusinessID', 'Stars', 'Date'])
+            writer.writerow(['UserID', 'Name'])
             writer.writerows(users)
 
-        # print(str(len(users)))
-
-
-b, r = GetRestaurants()
-GetReviews(b)
+# b, r = GetRestaurants()
+# q = GetReviews(b)
+GetUsers()
 print('Finished')

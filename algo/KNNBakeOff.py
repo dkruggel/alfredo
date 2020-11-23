@@ -44,6 +44,6 @@ class KNNBakeOff:
     # evaluator.AddAlgorithm(Random, "Random")
 
     # Fight!
-    evaluator.Evaluate(False)
+    evaluator.Evaluate(True)
 
     return evaluator.SampleTopNRecs(d, testSubject=self.user)
