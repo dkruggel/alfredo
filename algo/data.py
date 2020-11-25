@@ -6,8 +6,11 @@ import re
 from surprise import Dataset
 from surprise import Reader
 
+from pymongo import MongoClient
+from pprint import pprint
+
 from collections import defaultdict
-import numpy as np
+import pandas as pd
 
 class Data:
   businessID_to_name = {}
@@ -36,6 +39,27 @@ class Data:
         self.name_to_businessID[businessName] = businessID
 
     return ratingsDataset
+
+  def loadData(self, limit=10000000):
+    client = MongoClient("mongodb+srv://admin:pTqU9VLb0BVCyhV1@cluster0.xbrpk.gcp.mongodb.net/alfredo-data?retryWrites=true&w=majority")
+    db = client['alfredo-data']
+    # b = db.businesses.find_one({'BusinessID':'0Y5Kzo8PWHTjk0tlfAKcDQ'})
+    df = pd.DataFrame(list(db.reviews.find({}, {"UserID":1, "BusinessID":1, "Stars":1, "_id":0}).limit(limit)))
+    reader = Reader(line_format='user item rating', sep=',', skip_lines=1)
+
+    ratingsDataset = Dataset.load_from_df(df, reader)
+
+    with open(self.businessesPath, newline='', encoding='ISO-8859-1') as csvfile:
+      businessReader = csv.reader(csvfile)
+      next(businessReader)
+      for row in businessReader:
+        businessID = row[0]
+        businessName = row[1]
+        self.businessID_to_name[businessID] = businessName
+        self.name_to_businessID[businessName] = businessID
+
+    return ratingsDataset
+
 
   def getUserRatings(self, user):
     userRatings = []

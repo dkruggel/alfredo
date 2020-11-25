@@ -1,48 +1,61 @@
 from surprise.model_selection import train_test_split, cross_validate
 from surprise import KNNWithMeans
-from surprise import accuracy
+from surprise import SVD
+from RecommenderMetrics import RecommenderMetrics
 from KNNBakeOff import KNNBakeOff
-import sys
 from data import Data
-from pymongo import MongoClient
-from pprint import pprint
-
-# client = MongoClient('')
-# db = client.admin
+import sys
 
 def FitAndTest():
     sim_options = {
         'name': 'pearson', 'user_based': False
     }
-    algo = KNNWithMeans(k=40, min_k=1, sim_options=sim_options, verbose=True)
+    # algo = KNNWithMeans(k=20, min_k=1, sim_options=sim_options, verbose=True)
+    algo = SVD()
 
     d = Data()
-    data = d.loadBusinessLatestSmall()
+    data = d.loadData(1000)
+    # data = d.loadBusinessLatestSmall()
+
+    # Build full train set
     fullTrainSet = data.build_full_trainset()
 
-    results = cross_validate(
-        algo=algo, data=data, measures=['RMSE'],
-        cv=5, return_train_measures=True
-    )
+    # Build anti test set
+    fullAntiTestSet = fullTrainSet.build_anti_testset()
 
-    print(results['test_rmse'].mean())
+    # Build split train/test set for testing accuracy
+    trainSet, testSet = train_test_split(data, test_size=.25, random_state=1)
 
+    # Fit to train set
+    algo.fit(trainSet)
+
+    # Test test set
+    predictions = algo.test(testSet)
+    metrics = {}
+    metrics["RMSE"] = RecommenderMetrics.RMSE(predictions)
+    metrics["MAE"] = RecommenderMetrics.MAE(predictions)
+
+    print("\nRMSE", metrics["RMSE"])
+    print("MAE", metrics["MAE"])
+
+    # Fit full train set
     algo.fit(fullTrainSet)
 
-    testSet = data.GetAntiTestSetForUser('david')
+    # Predictions = Test anti test set
+    final_preds = algo.test(fullAntiTestSet)
 
-    predictions = algo.GetAlgorithm().test(testSet)
-
+    # Parse top N
     recommendations = []
 
-    for userID, businessID, actualRating, estimatedRating, _ in predictions:
-        bName = data.getBusinessName(businessID)
-        cats, hours = data.getBusinessData(businessID)
-        recommendations.append((bName, estimatedRating, cats, hours))
+    for userID, businessID, actualRating, estimatedRating, _ in final_preds:
+        bName = d.getBusinessName(businessID)
+        cats, hours = d.getBusinessData(businessID)
+        # recommendations.append((bName, estimatedRating, cats, hours))
+        recommendations.append((bName, estimatedRating))
 
-        recommendations.sort(key=lambda x: x[1], reverse=True)
+    recommendations.sort(key=lambda x: x[1], reverse=True)
 
-        print(recommendations[:10])
+    print(recommendations[:10])
 
 
 def GetBusinesses(user_name):
@@ -55,6 +68,6 @@ def GetBusinesses(user_name):
         return 'No results'
 
 
-FitAndTest()
-# user_name = sys.argv[1]
-# GetBusinesses(user_name)
+# FitAndTest()
+user_name = sys.argv[1]
+GetBusinesses(user_name)

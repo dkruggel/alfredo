@@ -17,7 +17,8 @@ class KNNBakeOff:
   
   def LoadMovieLensData(self):
     d = Data()
-    data = d.loadBusinessLatestSmall()
+    # data = d.loadBusinessLatestSmall()
+    data = d.loadData(8000)
     rankings = d.getPopularityRanks()
     return (d, data, rankings)
 

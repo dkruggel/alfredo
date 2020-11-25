@@ -80,7 +80,7 @@ class RecommenderMetrics:
     for rating in sorted(hits.keys()):
       print(rating, hits[rating] / total[rating])
 
-  def AverateReciprocalHitRank(topNPredicted, leftOutPredictions):
+  def AverageReciprocalHitRank(topNPredicted, leftOutPredictions):
     summation = 0
     total = 0
 
