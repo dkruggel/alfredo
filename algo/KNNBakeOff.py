@@ -18,8 +18,9 @@ class KNNBakeOff:
   def LoadMovieLensData(self):
     d = Data()
     # data = d.loadBusinessLatestSmall()
-    data = d.loadData(8000)
-    rankings = d.getPopularityRanks()
+    data = d.loadData()
+    # rankings = d.getPopularityRanks()
+    rankings = []
     return (d, data, rankings)
 
   def DoBakeOff(self):
@@ -45,6 +46,6 @@ class KNNBakeOff:
     # evaluator.AddAlgorithm(Random, "Random")
 
     # Fight!
-    evaluator.Evaluate(True)
+    # evaluator.Evaluate(True)
 
     return evaluator.SampleTopNRecs(d, testSubject=self.user)

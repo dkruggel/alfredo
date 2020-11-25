@@ -38,12 +38,12 @@ class Evaluator:
         print("\n")
         
         if (doTopN):
-            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
-                    "Algorithm", "RMSE", "MAE", "HR", "cHR", "ARHR", "Coverage", "Diversity", "Novelty"))
+            print("{:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10} {:<10}".format(
+                    "Algorithm", "RMSE", "MAE", "HR", "cHR", "ARHR", "Coverage", "Diversity")) # {:<10}, "Novelty"
             for (name, metrics) in results.items():
-                print("{:<10} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f}".format(
+                print("{:<10} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f} {:<10.4f}".format(
                         name, metrics["RMSE"], metrics["MAE"], metrics["HR"], metrics["cHR"], metrics["ARHR"],
-                                    metrics["Coverage"], metrics["Diversity"], metrics["Novelty"]))
+                                    metrics["Coverage"], metrics["Diversity"])) # {:<10.4f}, metrics["Novelty"]
         else:
             print("{:<10} {:<10} {:<10}".format("Algorithm", "RMSE", "MAE"))
             for (name, metrics) in results.items():

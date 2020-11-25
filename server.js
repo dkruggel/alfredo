@@ -3,22 +3,25 @@ const { spawn } = require('child_process');
 
 const app = express();
 
-app.get('/api', (req, res) => {
-  console.log('waiting');
-  const python = spawn('/bin/python3', ['./algo/main.py', 'david']);
-  python.stdout.on('data', function (data) {
-    console.log('Pipe data from python script ...');
-    dataToSend = data.toString();
+let runScript = function(user) {
+  return new Promise(function (success, nosuccess) {
+    const python = spawn('python', ['./algo/main.py', user]);
+
+    python.stdout.on('data', function (data) {
+      success(data);
+    });
+
+    python.stdout.on('data', (data) => {
+      nosuccess(data);
+    });
   });
-  python.on('close', (code) => {
-    console.log(`child process close all stdio with code ${code}`);
+}
+
+app.get('/api/:user', (req, res) => {
+  user = req.params['user'];
+  runScript(user).then(function (output) {
+    res.send(output.toString().slice(106));
   });
-  while (typeof dataToSend == "undefined") {
-    if (typeof dataToSend != "undefined") {
-      break;
-    }
-  }
-  res.send(dataToSend);
 });
 
 app.get('/', (req, res) => {

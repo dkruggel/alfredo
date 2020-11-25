@@ -58,8 +58,8 @@ class EvaluatedAlgorithm:
             metrics["Diversity"] = RecommenderMetrics.Diversity(topNPredicted, evaluationData.GetSimilarities())
             
             # Measure novelty (average popularity rank of recommendations):
-            metrics["Novelty"] = RecommenderMetrics.Novelty(topNPredicted, 
-                                                            evaluationData.GetPopularityRankings())
+            # metrics["Novelty"] = RecommenderMetrics.Novelty(topNPredicted, 
+            #                                                 evaluationData.GetPopularityRankings())
         
         if (verbose):
             print("Analysis complete.")

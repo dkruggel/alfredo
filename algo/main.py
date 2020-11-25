@@ -14,7 +14,7 @@ def FitAndTest():
     algo = SVD()
 
     d = Data()
-    data = d.loadData(1000)
+    data = d.loadData()
     # data = d.loadBusinessLatestSmall()
 
     # Build full train set

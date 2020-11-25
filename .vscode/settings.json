@@ -1,5 +1,5 @@
 {
     "editor.tabSize": 2,
     "prettier.jsxSingleQuote": true,
-    "python.pythonPath": "/bin/python3"
+    "python.pythonPath": "C:\\Python39\\python.exe"
 }

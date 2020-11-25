@@ -15,6 +15,7 @@ import pandas as pd
 class Data:
   businessID_to_name = {}
   name_to_businessID = {}
+  businessInfo = {}
   ratingsPath = '/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/reviews.csv'
   businessesPath = '/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/businesses.csv'
 
@@ -40,23 +41,33 @@ class Data:
 
     return ratingsDataset
 
-  def loadData(self, limit=10000000):
+  def loadData(self):
     client = MongoClient("mongodb+srv://admin:pTqU9VLb0BVCyhV1@cluster0.xbrpk.gcp.mongodb.net/alfredo-data?retryWrites=true&w=majority")
     db = client['alfredo-data']
     # b = db.businesses.find_one({'BusinessID':'0Y5Kzo8PWHTjk0tlfAKcDQ'})
-    df = pd.DataFrame(list(db.reviews.find({}, {"UserID":1, "BusinessID":1, "Stars":1, "_id":0}).limit(limit)))
+    df = pd.DataFrame(list(db.reviews.find({}, {"UserID":1, "BusinessID":1, "Stars":1, "_id":0})))
     reader = Reader(line_format='user item rating', sep=',', skip_lines=1)
 
     ratingsDataset = Dataset.load_from_df(df, reader)
 
-    with open(self.businessesPath, newline='', encoding='ISO-8859-1') as csvfile:
-      businessReader = csv.reader(csvfile)
-      next(businessReader)
-      for row in businessReader:
-        businessID = row[0]
-        businessName = row[1]
-        self.businessID_to_name[businessID] = businessName
-        self.name_to_businessID[businessName] = businessID
+    df_b = list(db.businesses.find())
+
+    for row in df_b:
+      businessID = row["BusinessID"]
+      businessName = row["Name"]
+      self.businessInfo[businessID] = [businessName, row["Categories"], row["State"], row["Hours"]]
+      self.businessID_to_name[businessID] = businessName
+      self.name_to_businessID[businessName] = businessID
+    
+
+    # with open(self.businessesPath, newline='', encoding='ISO-8859-1') as csvfile:
+    #   businessReader = csv.reader(csvfile)
+    #   next(businessReader)
+    #   for row in businessReader:
+    #     businessID = row[0]
+    #     businessName = row[1]
+    #     self.businessID_to_name[businessID] = businessName
+    #     self.name_to_businessID[businessName] = businessID
 
     return ratingsDataset
 
@@ -107,12 +118,16 @@ class Data:
       return 0
 
   def getBusinessData(self, business):
-    with open(self.businessesPath, newline='') as csvfile:
-      businessReader = csv.reader(csvfile)
-      next(businessReader)
-      for row in businessReader:
-        businessID = row[0]
-        if (business == businessID):
-          return row[2], row[4]
+    business = self.businessInfo[business]
+    cats = business[1]
+    hours = business[3]
+    return cats, hours
+    # with open(self.businessesPath, newline='') as csvfile:
+    #   businessReader = csv.reader(csvfile)
+    #   next(businessReader)
+    #   for row in businessReader:
+    #     businessID = row[0]
+    #     if (business == businessID):
+    #       return row[2], row[4]
 
     return []
