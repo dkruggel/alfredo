@@ -6,6 +6,7 @@ Created on Thu May  3 10:22:34 2018
 """
 from EvaluationData import EvaluationData
 from EvaluatedAlgorithm import EvaluatedAlgorithm
+import json
 
 class Evaluator:
     
@@ -69,11 +70,11 @@ class Evaluator:
             for userID, businessID, actualRating, estimatedRating, _ in predictions:
                 bName = data.getBusinessName(businessID)
                 cats, hours = data.getBusinessData(businessID)
-                recommendations.append((bName, estimatedRating, cats, hours))
+                recommendations.append((businessID, bName, format(estimatedRating, '.1f'), cats, hours))
             
-            recommendations.sort(key=lambda x: x[1], reverse=True)
+            recommendations.sort(key=lambda x: x[2], reverse=True)
 
-            return recommendations[:10]
+            return json.dumps(recommendations[:10])
 
             # for ratings in recommendations[:10]:
             #     # Return a dictionary with businessID, rating, categories, hours

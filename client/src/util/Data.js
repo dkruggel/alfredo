@@ -1,24 +1,22 @@
 const Data = {
-    async Search(term, location, sortBy) {
-        return fetch(`http://localhost:8000/businesses?categories_like=Restaurant&stars_gte=4.5`)
-                .then(response => {return response.json();})
-                .then(jsonResponse => {
-                    console.log(jsonResponse);
-                    return jsonResponse.map(business => {
-                        return {
-                            'id': business.business_id,
-                            'name': business.name,
-                            'address': business.address,
-                            'city': business.city,
-                            'state': business.state,
-                            'zipCode': business.zip_code,
-                            'rating': business.stars,
-                            'categories': business.categories,
-                            'reviewCount': business.review_count
-                        }
-                    });
-                });
-    }
-}
+  async Search() {
+    return fetch(`http://localhost:8000/api/david`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((jsonResponse) => {
+        // console.log(jsonResponse);
+        return jsonResponse.map((business) => {
+          return {
+            id: business[0],
+            name: business[1],
+            rating: business[2],
+            categories: business[3],
+            hours: business[4],
+          };
+        });
+      });
+  },
+};
 
 export default Data;

@@ -17,10 +17,15 @@ let runScript = function(user) {
   });
 }
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.get('/api/:user', (req, res) => {
   user = req.params['user'];
   runScript(user).then(function (output) {
-    res.send(output.toString().slice(106));
+    res.send(output.toString().slice(107,-1));
   });
 });
 

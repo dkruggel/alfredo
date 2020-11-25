@@ -8,7 +8,7 @@ export default class SearchBar extends React.Component {
   }
 
   handleSearch(event) {
-    this.props.searchData('', '', '');
+    this.props.searchData();
     event.preventDefault();
   }
 

@@ -121,6 +121,8 @@ class Data:
     business = self.businessInfo[business]
     cats = business[1]
     hours = business[3]
+    if hours == 'ull':
+      hours = ''
     return cats, hours
     # with open(self.businessesPath, newline='') as csvfile:
     #   businessReader = csv.reader(csvfile)
