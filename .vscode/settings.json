@@ -1,5 +1,11 @@
 {
     "editor.tabSize": 2,
     "prettier.jsxSingleQuote": true,
-    "python.pythonPath": "/usr/bin/python3"
+    "python.pythonPath": "/usr/bin/python3",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/f9496fe0-e355-40e0-a6eb-f658713001d4/resourceGroups/alfredo/providers/Microsoft.Web/sites/alfredo",
+    "appService.deploySubpath": "."
 }
