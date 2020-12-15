@@ -9,7 +9,7 @@ from data import Data
 sim_options = {'name': 'cosine', 'user_based': True}
 
 
-def GetAccuracy(user='david'):
+def GetAccuracy():
     d = Data()
     data = d.loadData()
 
