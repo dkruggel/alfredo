@@ -4,6 +4,7 @@ Created on Thu May  3 10:48:02 2018
 
 @author: Frank
 """
+from datetime import datetime
 from surprise.model_selection import train_test_split
 from surprise.model_selection import LeaveOneOut
 from surprise import KNNBaseline
@@ -11,12 +12,13 @@ from surprise import KNNBaseline
 class EvaluationData:
     
     def __init__(self, data, popularityRankings):
-        
         self.rankings = popularityRankings
         
         #Build a full training set for evaluating overall properties
         self.fullTrainSet = data.build_full_trainset()
-        self.fullAntiTestSet = self.fullTrainSet.build_anti_testset()
+        start = datetime.now()
+        # self.fullAntiTestSet = self.fullTrainSet.build_anti_testset()
+        end = datetime.now()
         
         #Build a 75/25 train/test split for measuring accuracy
         self.trainSet, self.testSet = train_test_split(data, test_size=.25, random_state=1)
@@ -34,6 +36,7 @@ class EvaluationData:
         sim_options = {'name': 'MSD', 'user_based': False}
         self.simsAlgo = KNNBaseline(sim_options=sim_options)
         self.simsAlgo.fit(self.fullTrainSet)
+        # print("Create evalutation data:", end - start)
             
     def GetFullTrainSet(self):
         return self.fullTrainSet

@@ -1,49 +1,37 @@
 import React from 'react';
 import './App.css';
-import './components/SearchBar';
-import SearchBar from './components/SearchBar';
-import Results from './components/Results';
-import Data from '../src/util/Data';
+import { useAuth0 } from '@auth0/auth0-react';
+import { Loading } from './components/Loading';
+import Dashboard from './pages/Dashboard';
+import { Home } from './pages/Home';
+import NavBar from './components/NavBar';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { businesses: [], visibility: 'hidden', display: 'none', marginTop: '0', loading: false };
-    this.searchHandler = this.searchHandler.bind(this);
-    this.searchData = this.searchData.bind(this);
-    this.showLoading = this.showLoading.bind(this);
+const App = () => {
+  const { isLoading, isAuthenticated, user } = useAuth0();
+
+  if (isLoading) {
+    return <Loading />;
   }
 
-  showLoading = function () {
-    return new Promise(() => {
-      this.setState({ visibility: 'visible', display: 'flex center', marginTop: '250', loading: true });
-    });
-  };
-
-  searchData = function () {
-    return new Promise(() => {
-      Data.Search().then((businesses) => {
-        this.setState({ businesses: businesses, visibility: 'hidden', display: 'none', marginTop: '0', loading: false });
-      });
-    });
-  };
-
-  searchHandler = function () {
-    this.showLoading().then(this.searchData());
-  };
-
-  render() {
+  if (isAuthenticated) {
     return (
-      <div className='App'>
-        <SearchBar searchData={this.searchHandler} />
-        <Results
-          businesses={this.state.businesses}
-          visibility={this.state.loading}
-          marginTop={this.state.marginTop}
-          display={this.state.display}
-          loading={this.state.loading}
-        />
-      </div>
+      <>
+        <NavBar />
+        <div className='container flex-grow-1'>
+          <Dashboard user={user.name.toString().slice(0, user.name.toString().indexOf(' ')).toLowerCase()}/>
+        </div>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <NavBar />
+        <div className='container flex-grow-1'>
+          <Home />
+        </div>
+      </>
     );
   }
-}
+};
+
+export default App;

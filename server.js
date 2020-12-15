@@ -3,9 +3,9 @@ const { spawn } = require('child_process');
 
 const app = express();
 
-let runScript = function(user) {
+let runScript = function (user, measAcc) {
   return new Promise(function (success, nosuccess) {
-    const python = spawn('python', ['./algo/main.py', user]);
+    const python = spawn('/usr/bin/python3', ['./algo/main.py', user, measAcc]);
 
     python.stdout.on('data', function (data) {
       success(data);
@@ -15,17 +15,24 @@ let runScript = function(user) {
       nosuccess(data);
     });
   });
-}
+};
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   next();
 });
 
-app.get('/api/:user', (req, res) => {
-  user = req.params['user'];
-  runScript(user).then(function (output) {
-    res.send(output.toString().slice(107,-1));
+app.get('/search/', (req, res) => {
+  runScript('ofKDkJKXSKZXu5xJNGiiBQ', false).then(function (output) {
+    out = output.toString();
+    res.send(out);
+  });
+});
+
+app.get('/accuracy/', (req, res) => {
+  runScript('ofKDkJKXSKZXu5xJNGiiBQ', 'True').then(function (output) {
+    out = output.toString();
+    res.send(out);
   });
 });
 

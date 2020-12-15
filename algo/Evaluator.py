@@ -6,6 +6,7 @@ Created on Thu May  3 10:22:34 2018
 """
 from EvaluationData import EvaluationData
 from EvaluatedAlgorithm import EvaluatedAlgorithm
+from datetime import datetime
 import json
 
 class Evaluator:
@@ -50,7 +51,7 @@ class Evaluator:
             for (name, metrics) in results.items():
                 print("{:<10} {:<10.4f} {:<10.4f}".format(name, metrics["RMSE"], metrics["MAE"]))
         
-    def SampleTopNRecs(self, data, testSubject='david', k=10):
+    def SampleTopNRecs(self, data, testSubject, k=10):
         
         for algo in self.algorithms:
             # print("\nUsing recommender ", algo.GetName())

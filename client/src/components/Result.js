@@ -11,8 +11,8 @@ export default class Result extends React.Component {
               primary={this.props.business.name}
               secondary={
                 <>
-                  Rating: {this.props.business.rating}&emsp; Categories:
-                  {this.props.business.categories}
+                  {/* Rating: {this.props.business.rating}&emsp; */}
+                  Categories: {this.props.business.categories}
                 </>
               }
             />

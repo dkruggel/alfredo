@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 export default class SearchBar extends React.Component {
   constructor(props) {
@@ -15,7 +15,8 @@ export default class SearchBar extends React.Component {
   render() {
     return (
       <>
-        <Input type='text' placeholder='Search...' color='primary'></Input>
+        {/* <Input type='text' placeholder='Search...' color='primary'></Input> */}
+        {/* <Button color='primary'>Dashboard</Button> */}
         <Button color='primary' onClick={this.handleSearch}>
           Search
         </Button>

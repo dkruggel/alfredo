@@ -1,3 +1,4 @@
+from datetime import datetime
 from surprise import Reader
 from surprise import Dataset
 from surprise import KNNBasic
@@ -40,10 +41,6 @@ class KNNBakeOff:
     # Item-based KNN
     # ItemKNN = KNNBasic(sim_options = {'name': 'cosine', 'user_based': False})
     # evaluator.AddAlgorithm(ItemKNN, "Item KNN")
-
-    # Just make random recommendations
-    # Random = NormalPredictor()
-    # evaluator.AddAlgorithm(Random, "Random")
 
     # Fight!
     # evaluator.Evaluate(True)

@@ -1,3 +1,4 @@
+from datetime import date, datetime
 import os
 import csv
 import sys
@@ -44,7 +45,6 @@ class Data:
   def loadData(self):
     client = MongoClient("mongodb+srv://admin:pTqU9VLb0BVCyhV1@cluster0.xbrpk.gcp.mongodb.net/alfredo-data?retryWrites=true&w=majority")
     db = client['alfredo-data']
-    # b = db.businesses.find_one({'BusinessID':'0Y5Kzo8PWHTjk0tlfAKcDQ'})
     df = pd.DataFrame(list(db.reviews.find({}, {"UserID":1, "BusinessID":1, "Stars":1, "_id":0})))
     reader = Reader(line_format='user item rating', sep=',', skip_lines=1)
 
@@ -58,16 +58,6 @@ class Data:
       self.businessInfo[businessID] = [businessName, row["Categories"], row["State"], row["Hours"]]
       self.businessID_to_name[businessID] = businessName
       self.name_to_businessID[businessName] = businessID
-    
-
-    # with open(self.businessesPath, newline='', encoding='ISO-8859-1') as csvfile:
-    #   businessReader = csv.reader(csvfile)
-    #   next(businessReader)
-    #   for row in businessReader:
-    #     businessID = row[0]
-    #     businessName = row[1]
-    #     self.businessID_to_name[businessID] = businessName
-    #     self.name_to_businessID[businessName] = businessID
 
     return ratingsDataset
 

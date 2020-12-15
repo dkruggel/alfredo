@@ -1,10 +1,15 @@
 from surprise.model_selection import train_test_split, cross_validate
-from surprise import KNNWithMeans
+from surprise.model_selection import GridSearchCV
 from surprise import SVD
+from surprise.prediction_algorithms.knns import KNNBaseline
 from RecommenderMetrics import RecommenderMetrics
 from KNNBakeOff import KNNBakeOff
 from data import Data
 import sys
+import Algorithm
+import json
+import datetime
+
 
 def FitAndTest():
     sim_options = {
@@ -15,7 +20,6 @@ def FitAndTest():
 
     d = Data()
     data = d.loadData()
-    # data = d.loadBusinessLatestSmall()
 
     # Build full train set
     fullTrainSet = data.build_full_trainset()
@@ -58,16 +62,65 @@ def FitAndTest():
     print(recommendations[:10])
 
 
-def GetBusinesses(user_name):
-    if len(user_name) > 0:
-        rec = KNNBakeOff(user_name)
-        res = rec.DoBakeOff()
+def SVDAlgo():
+    d = Data()
+    # Load the movielens-100k dataset (download it if needed),
+    data = d.loadData()
+
+    # param_grid = {'bsl_options': {'method': ['als', 'sgd'],
+    #                           'reg': [1, 2]},
+    #           'k': [2, 3],
+    #           'sim_options': {'name': ['msd', 'cosine'],
+    #                           'min_support': [1, 5],
+    #                           'user_based': [True]}
+    #           }
+
+    param_grid = {'bsl_options': {'method': 'als', 'reg': [1, 2]},
+                  'k': 2,
+                  'sim_options': {'name': 'msd',
+                                  'min_support': 5,
+                                  'user_based': True}}
+    gs = GridSearchCV(KNNBaseline, param_grid, measures=['rmse', 'mae'], cv=5)
+
+    gs.fit(data)
+
+    # best RMSE score
+    print(gs.best_score['rmse'])
+    print(gs.best_score['mae'])
+
+    # We can now use the algorithm that yields the best rmse:
+    algo = gs.best_estimator['rmse']
+    trainSet = data.build_full_trainset()
+    algo.fit(trainSet)
+
+    predictions = algo.test(trainSet.build_testset())
+
+    res = []
+    for userName, itemID, r_ui, est, _ in predictions:
+        res.append((userName, itemID, r_ui, est))
+    res.sort(key=lambda x: x[3], reverse=True)
+    print(res[:10])
+
+
+def ThirdTimeIsTheCharm(user_name, measureAccuracy):
+    if measureAccuracy == 'True':
+        rmse, mae = Algorithm.GetAccuracy(user_name)
+        res = json.dumps({'rmse': rmse, 'mae': mae})
         print(res)
-        return res
     else:
-        return 'No results'
+        d = Data()
+        recs = Algorithm.GetRecommendations(user_name)
+
+        res = []
+        for j, k in recs:
+            res.append((d.getBusinessName(j), k))
+
+        print(json.dumps(res))
 
 
-# FitAndTest()
-user_name = sys.argv[1]
-GetBusinesses(user_name)
+user_name = ''
+meas_acc = False
+if len(sys.argv) > 1:
+    user_name = sys.argv[1]
+    meas_acc = sys.argv[2]
+ThirdTimeIsTheCharm(user_name, meas_acc)

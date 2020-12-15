@@ -16,14 +16,8 @@ def GetRestaurants():
             isRest = 'Restaurants' in categories and 'Shopping' not in categories and 'Grocery' not in categories and 'Coffee & Tea' not in categories and 'Tea Rooms' not in categories and 'Convenience Stores' not in categories and 'Hotels & Travel' not in categories and 'Internet Cafes' not in categories
             if isRest:
                 businesses.append(businessID)
-                restaurants.append([businessID, name, categories, state, hours])
-
-        # print(str(len(businesses)))
-        # with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/businesses.csv', 'w') as bFile:
-        #     writer = csv.writer(bFile)
-
-        #     writer.writerow(['BusinessID', 'Name', 'Categories', 'State'])
-        #     writer.writerows(restaurants)
+                restaurants.append(
+                    [businessID, name, categories, state, hours])
 
         return businesses, restaurants
 
@@ -43,13 +37,8 @@ def GetReviews(businesses):
             if isRest and date.startswith(('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')) and len(date) < 20:
                 reviews.append([userID, businessID, stars, date])
 
-        # with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/reviews.csv', mode='w') as outbound:
-        #     writer = csv.writer(outbound)
-
-        #     writer.writerow(['UserID', 'BusinessID', 'Stars', 'Date'])
-        #     writer.writerows(reviews)
-
         return reviews
+
 
 def GetUsers():
     reviewUsers = []
@@ -58,13 +47,14 @@ def GetUsers():
         next(reviewReader)
         for row in reviewReader:
             reviewUsers.append(row[0])
-    with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/yelp_academic_dataset_user.json') as userFile:    
+    with open('/home/davidkruggel/repos/alfredo/client/src/yelp_dataset/yelp_academic_dataset_user.json') as userFile:
         line = userFile.readline()
         users = []
         while line != '':
             userID = line[line.find('user_id') + 10:line.find('name') - 3]
             if userID in reviewUsers:
-                name = line[line.find('name') + 7:line.find('review_count') - 3]
+                name = line[line.find('name') +
+                            7:line.find('review_count') - 3]
                 users.append((userID, name))
             line = userFile.readline()
 
@@ -74,7 +64,6 @@ def GetUsers():
             writer.writerow(['UserID', 'Name'])
             writer.writerows(users)
 
-# b, r = GetRestaurants()
-# q = GetReviews(b)
+GetReviews(GetRestaurants())
 GetUsers()
 print('Finished')
