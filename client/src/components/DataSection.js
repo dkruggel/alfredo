@@ -3,7 +3,7 @@ import React from 'react'
 const DataSection = (props) => {
   if (props.title === 'Algorithm Data') {
     return (
-      <div style={{border:'solid black 1px'}}>
+      <div>
         <h1>{props.title}</h1>
         <div style={{display:'flex', flexDirection:'column'}}>
           <p>Query: {props.data}s&nbsp;</p>
@@ -15,7 +15,7 @@ const DataSection = (props) => {
     )
   } else {
     return (
-      <div style={{border:'solid black 1px'}}>
+      <div>
         <h1>{props.title}</h1>
       </div>
     )

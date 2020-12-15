@@ -4,9 +4,7 @@ import Results from '../components/Results';
 import DataSection from '../components/DataSection';
 import Data from '../util/Data';
 import Accuracy from '../util/Accuracy';
-import './dashboard.css';
 import moment from 'moment';
-// import NavBar from '../components/NavBar';
 
 export default class Dashboard extends React.Component {
   constructor(props) {
@@ -89,9 +87,6 @@ export default class Dashboard extends React.Component {
             mae={this.state.mae}
             rmse={this.state.rmse}
           />
-          <DataSection title='Title 2' />
-          <DataSection title='Title 3' />
-          <DataSection title='Title 4' />
         </div>
         <Results
           businesses={this.state.businesses}
