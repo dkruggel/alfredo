@@ -81,7 +81,7 @@ export default class Dashboard extends React.Component {
         <SearchBar searchData={this.searchHandler} />
         <div className='data-sections'>
           <DataSection
-            title='Algorithm Data Points'
+            title='Algorithm Data'
             data={this.state.queryTime}
             user={this.state.user}
             mae={this.state.mae}
