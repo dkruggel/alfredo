@@ -76,6 +76,7 @@ export default class Dashboard extends React.Component {
   };
 
   render() {
+    // change
     return (
       <div className='App'>
         <SearchBar searchData={this.searchHandler} />
