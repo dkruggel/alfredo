@@ -17,10 +17,10 @@ let runScript = function (user, measAcc) {
   });
 };
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   next();
+// });
 
 app.get('/search/', (req, res) => {
   runScript('ofKDkJKXSKZXu5xJNGiiBQ', false).then(function (output) {
