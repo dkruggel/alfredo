@@ -1,4 +1,5 @@
 const express = require('express');
+var https = require('https');
 const { spawn } = require('child_process');
 
 const app = express();
@@ -40,6 +41,12 @@ app.get('/', (req, res) => {
   res.send('Hello');
 });
 
-app.listen(8000, () => {
-  console.log('Listening on port 8000');
-});
+https
+  .createServer(() => {
+    console.log('Listening everywhere');
+  }, app)
+  .listen();
+
+// app.listen(8000, () => {
+//   console.log('Listening on port 8000');
+// });
